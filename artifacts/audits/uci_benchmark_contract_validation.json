@@ -1,0 +1,22 @@
+{
+  "audit_id": "uci_benchmark_contract_validation",
+  "result": "PASS",
+  "validation_context": "Colab execution reported by user on 2026-11-12",
+  "source_sha256": "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602",
+  "source_archive_integrity": "PASS",
+  "source_member_check": "PASS",
+  "data_shape": [
+    30000,
+    25
+  ],
+  "column_schema": "PASS",
+  "missing_values_check": "PASS",
+  "unique_identifier_check": "PASS",
+  "binary_target_check": "PASS",
+  "numeric_schema_check": "PASS",
+  "contract_json_reload": "PASS",
+  "contract_feature_count": 23,
+  "training_performed": false,
+  "source_modified": false,
+  "evidence_note": "This record captures the validation output supplied in the conversation; it is not an independently rerun GitHub CI result."
+}
