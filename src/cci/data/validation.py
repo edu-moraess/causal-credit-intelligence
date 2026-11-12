@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from cci.core.exceptions import DataContractError, DataLeakageError
+from cci.core.exceptions import DataLeakageError
 
 
 @dataclass
@@ -30,7 +30,8 @@ class ValidationReport:
 def validate_schema(frame: Any, required_columns: tuple[str, ...] | list[str]) -> ValidationReport:
     report = ValidationReport()
     missing = sorted(set(required_columns) - set(getattr(frame, "columns", [])))
-    report.add("required_columns", not missing, f"Missing columns: {missing}" if missing else "All required columns present")
+    report.add("required_columns", not missing,
+               f"Missing columns: {missing}" if missing else "All required columns present")
     return report
 
 
@@ -38,14 +39,11 @@ def validate_types(frame: Any, date_columns: tuple[str, ...] = ("observation_dat
     report = ValidationReport()
     for col in date_columns:
         if col in frame.columns:
-            try:
-                import pandas as pd
-                parsed = pd.to_datetime(frame[col], errors="coerce")
-                invalid = int(parsed.isna().sum())
-            except Exception as exc:
-                report.add(f"datetime:{col}", False, f"Could not validate {col}: {exc}")
-                continue
-            report.add(f"datetime:{col}", invalid == 0, f"{invalid} invalid/missing date values" if invalid else "Valid datetime values")
+            import pandas as pd
+            parsed = pd.to_datetime(frame[col], errors="coerce")
+            invalid = int(parsed.isna().sum())
+            report.add(f"datetime:{col}", invalid == 0,
+                       f"{invalid} invalid/missing date values" if invalid else "Valid datetime values")
     return report
 
 
@@ -54,8 +52,7 @@ def check_missingness(frame: Any, threshold: float = 0.30) -> ValidationReport:
     if len(frame) == 0:
         report.add("non_empty", False, "Dataset is empty")
         return report
-    rates = frame.isna().mean()
-    for col, rate in rates.items():
+    for col, rate in frame.isna().mean().items():
         report.add(f"missingness:{col}", float(rate) <= threshold,
                    f"{col}: missingness {float(rate):.3f} exceeds {threshold:.3f}" if float(rate) > threshold else "")
     return report
@@ -63,12 +60,25 @@ def check_missingness(frame: Any, threshold: float = 0.30) -> ValidationReport:
 
 def check_duplicates(frame: Any, subset: tuple[str, ...] | list[str] = ("customer_id", "observation_date")) -> ValidationReport:
     report = ValidationReport()
-    available = [c for c in subset if c in frame.columns]
-    if not available:
-        report.add("duplicates", True, "No configured duplicate key columns found", severity="warning")
+    missing = sorted(set(subset) - set(frame.columns))
+    if missing:
+        report.add("duplicates", False, f"Configured duplicate key columns missing: {missing}")
         return report
-    count = int(frame.duplicated(subset=available, keep=False).sum())
-    report.add("duplicates", count == 0, f"{count} rows belong to duplicate keys {available}" if count else "No duplicate keys")
+    count = int(frame.duplicated(subset=list(subset), keep=False).sum())
+    report.add("duplicates", count == 0,
+               f"{count} rows belong to duplicate keys {list(subset)}" if count else "No duplicate keys")
+    return report
+
+
+def check_binary_values(frame: Any, columns: tuple[str, ...] | list[str]) -> ValidationReport:
+    report = ValidationReport()
+    for col in columns:
+        if col not in frame.columns:
+            continue
+        values = set(frame[col].dropna().unique().tolist())
+        invalid = sorted((repr(v) for v in values if v not in (0, 1, False, True)))
+        report.add(f"binary:{col}", not invalid,
+                   f"{col}: expected only 0/1; found {invalid}" if invalid else f"{col} contains only 0/1 values")
     return report
 
 
@@ -80,7 +90,8 @@ def check_temporal_consistency(frame: Any, observation_date: str = "observation_
     import pandas as pd
     dates = pd.to_datetime(frame[observation_date], errors="coerce")
     valid = dates.notna().all()
-    report.add("temporal_consistency", bool(valid), "Invalid observation dates found" if not valid else "Observation dates parse successfully")
+    report.add("temporal_consistency", bool(valid),
+               "Invalid observation dates found" if not valid else "Observation dates parse successfully")
     return report
 
 
@@ -94,13 +105,38 @@ def check_leakage(covariates: list[str] | tuple[str, ...], forbidden: list[str] 
 
 def run_structural_validation(frame: Any, contract: Any = None) -> ValidationReport:
     required = contract.required_columns() if contract else ("customer_id", "observation_date")
-    reports = [validate_schema(frame, required), validate_types(frame),
-               check_missingness(frame), check_duplicates(frame), check_temporal_consistency(frame)]
-    merged = ValidationReport()
+    schema = validate_schema(frame, required)
+    merged = ValidationReport(checks=list(schema.checks), errors=list(schema.errors))
+    if not schema.passed:
+        return merged
+
+    duplicate_key = getattr(contract, "duplicate_key", ("customer_id", "observation_date"))
+    threshold = getattr(contract, "high_missing_threshold", 0.30)
+    treatment = getattr(contract, "treatment", "treatment_indicator")
+    outcomes = getattr(contract, "outcomes", ())
+    reports = [
+        validate_types(frame),
+        check_missingness(frame, threshold=threshold),
+        check_duplicates(frame, subset=duplicate_key),
+        check_temporal_consistency(frame),
+        check_binary_values(frame, (treatment,) + tuple(outcomes)),
+    ]
     for item in reports:
         merged.checks.extend(item.checks)
         merged.errors.extend(item.errors)
         merged.warnings.extend(item.warnings)
+
+    if contract and getattr(contract, "enforce_pre_treatment_covariates", False):
+        if not getattr(contract, "pre_treatment_covariates", ()):
+            merged.add("pre_treatment_covariates", False,
+                       "No pre-treatment covariates configured; causal analysis is not ready.",
+                       severity="warning")
+        else:
+            leakage = check_leakage(contract.pre_treatment_covariates,
+                                    contract.post_treatment_fields)
+            merged.checks.extend(leakage.checks)
+            merged.errors.extend(leakage.errors)
+            merged.warnings.extend(leakage.warnings)
     return merged
 
 
