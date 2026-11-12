@@ -100,7 +100,7 @@ def audit_uci_temporal_availability(
         if temporal_class not in {
             "monthly_observation_without_release_timestamp",
             "point_in_time_value_without_as_of_date",
-            "static_attribute_without_reference_date",
+            "attribute_without_reference_date",
         }:
             raise DataContractError(
                 f"Unsupported temporal classification for feature {feature!r}."
