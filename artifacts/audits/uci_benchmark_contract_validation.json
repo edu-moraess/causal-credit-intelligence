@@ -5,10 +5,7 @@
   "source_sha256": "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602",
   "source_archive_integrity": "PASS",
   "source_member_check": "PASS",
-  "data_shape": [
-    30000,
-    25
-  ],
+  "data_shape": [30000, 25],
   "column_schema": "PASS",
   "missing_values_check": "PASS",
   "unique_identifier_check": "PASS",
@@ -18,7 +15,7 @@
   "contract_feature_count": 23,
   "training_performed": false,
   "source_modified": false,
-  "evidence_note": "This record captures the validation output supplied in the conversation; it is not an independently rerun GitHub CI result.",
+  "evidence_note": "This record captures validation output supplied by the user; it is not an independently rerun GitHub CI result.",
   "repository_test_validation": {
     "context": "User-reported manual Colab validation on 2026-11-12",
     "command": "python -m pytest -v",
@@ -33,5 +30,21 @@
     "causal_support": false,
     "training_performed": false,
     "result": "PASS"
+  },
+  "end_to_end_loader_validation": {
+    "context": "User-reported manual Colab validation on 2026-11-12",
+    "package_import": "PASS",
+    "archive_copy_integrity": "PASS",
+    "archive_sha256": "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602",
+    "project_root_containment": "PASS",
+    "loader_result": "PASS",
+    "frame_validation": "PASS",
+    "rows": 30000,
+    "columns": 25,
+    "feature_count": 23,
+    "errors": [],
+    "training_performed": false,
+    "source_modified": false,
+    "note": "The original archive was preserved. A byte-identical copy was placed inside the validation clone because the loader correctly rejects paths resolving outside the project root. The XLS member was read in memory; no extraction or training was performed."
   }
 }
