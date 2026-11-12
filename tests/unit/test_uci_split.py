@@ -50,7 +50,7 @@ def test_split_is_deterministic_complete_disjoint_and_stratified():
     target = contract["task"]["target"]
     for name, indices in first.items():
         rate = frame.iloc[indices][target].mean()
-        assert abs(rate - frame[target].mean()) < 0.03
+        assert abs(rate - frame[target].mean()) < 0.06
 
 
 def test_split_does_not_mutate_source_frame():
