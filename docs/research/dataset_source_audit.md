@@ -30,7 +30,7 @@ This is a **provisional engineering selection only**. The dataset is not suffici
 3. LendingClub accepted-loan data description (secondary documentation): https://github.com/michelkana/lendingclub/blob/master/CS109aLendingClub_Data.md  
    Describes accepted/funded loans from 2007 to 2018 Q3, with loan-level attributes and status. Treat this as a discovery reference, not an authoritative current distribution or license statement.
 
-Before acquisition, verify the current official source, terms/license, attribution requirements, file checksum, dataset version, and permitted use. Do not treat third-party mirrors as canonical.
+UCI's official dataset page currently lists **CC BY 4.0** and provides the dataset download and citation. Preserve attribution to I-Cheng Yeh and the UCI dataset record; indicate any adaptations. Recheck the official page at acquisition time and retain a copy/reference of the license terms with the acquisition manifest. Do not treat third-party mirrors as canonical.
 
 ## 4. UCI variable-level suitability
 
