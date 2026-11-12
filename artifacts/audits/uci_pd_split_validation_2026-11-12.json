@@ -1,0 +1,43 @@
+{
+  "audit_id": "uci_credit_default_pd_split_validation_2026-11-12",
+  "date": "2026-11-12",
+  "branch": "feat/uci-pd-split-protocol",
+  "pull_request": 2,
+  "validation_source": "user-reported manual execution in Google Colab",
+  "validation_type": "manual",
+  "full_repository_test_suite": {
+    "status": "PASS",
+    "exact_test_count": null,
+    "note": "The user reported that all validation steps passed; an exact pytest count was not included in the report."
+  },
+  "split_protocol": {
+    "status": "PASS",
+    "strategy": "stratified_random_by_target",
+    "ratios": {
+      "train": 0.70,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "random_seed": 42,
+    "determinism": "PASS",
+    "complete_partition": "PASS",
+    "pairwise_disjoint": "PASS",
+    "target_distribution_checks": "PASS",
+    "source_sha256_preservation": "PASS",
+    "source_frame_mutation": "not observed; split function is designed as read-only"
+  },
+  "scientific_scope": {
+    "temporal_validation_claimed": false,
+    "causal_effect_estimation_supported": false,
+    "training_performed": false,
+    "feature_transformations_fitted": false,
+    "production_use_authorized": false
+  },
+  "limitations": [
+    "The exact pytest test count was not supplied.",
+    "The UCI source does not establish a sufficiently precise operational observation cutoff or exact target window.",
+    "The random split is not temporal or out-of-time validation."
+  ],
+  "raw_source_modified": false,
+  "ci_run": false
+}

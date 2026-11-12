@@ -1,0 +1,40 @@
+{
+  "split_config_id": "uci_credit_default_pd_v1",
+  "version": "1.0.0",
+  "purpose": "Deterministic predictive benchmark partition; no model training",
+  "strategy": "stratified_random_by_target",
+  "ratios": {
+    "train": 0.70,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "random_seed": 42,
+  "stratification_column": "default payment next month",
+  "partition_unit": "one row per unique UCI client identifier",
+  "temporal_validation_claimed": false,
+  "temporal_limitation": "The source describes April-September 2005 predictors and a next-month default label, but does not establish a sufficiently precise operational observation cutoff or target window. This random split is not temporal or out-of-time validation.",
+  "fit_policy": {
+    "split_before_any_fitted_preprocessing": true,
+    "fit_transformers_on_train_only": true,
+    "validation_use": "model selection and threshold selection only",
+    "test_use": "single final evaluation after model and threshold are frozen",
+    "test_reuse_for_tuning": false
+  },
+  "exclusions": {
+    "identifier": "ID",
+    "target": "default payment next month",
+    "identifier_is_never_a_feature": true,
+    "target_is_never_a_feature": true
+  },
+  "semantic_policy": {
+    "raw_category_codes_preserved": true,
+    "automatic_category_relabeling": false,
+    "automatic_winsorization": false,
+    "feature_encoding": "not_defined_in_this_phase"
+  },
+  "governance": {
+    "fairness_review_required": true,
+    "production_use_authorized": false,
+    "causal_effect_estimation_supported": false
+  }
+}
