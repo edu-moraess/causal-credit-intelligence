@@ -18,5 +18,20 @@
   "contract_feature_count": 23,
   "training_performed": false,
   "source_modified": false,
-  "evidence_note": "This record captures the validation output supplied in the conversation; it is not an independently rerun GitHub CI result."
+  "evidence_note": "This record captures the validation output supplied in the conversation; it is not an independently rerun GitHub CI result.",
+  "repository_test_validation": {
+    "context": "User-reported manual Colab validation on 2026-11-12",
+    "command": "python -m pytest -v",
+    "result": "PASS",
+    "passed": 43,
+    "failed": 0,
+    "note": "The 43 passing tests include the existing 39-test suite and the 4 new UCI benchmark contract tests. Not a GitHub Actions/CI run."
+  },
+  "contract_invariant_check": {
+    "contract_id": "uci_credit_default_benchmark_v1",
+    "feature_count": 23,
+    "causal_support": false,
+    "training_performed": false,
+    "result": "PASS"
+  }
 }
