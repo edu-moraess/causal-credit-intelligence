@@ -1,0 +1,168 @@
+{
+  "contract_id": "uci_credit_default_benchmark_v1",
+  "contract_version": "1.0.0",
+  "status": "proposed_for_validation",
+  "purpose": "Predictive credit-default benchmark and data-engineering validation",
+  "source": {
+    "dataset_name": "Default of Credit Card Clients",
+    "provider": "UCI Machine Learning Repository",
+    "doi": "10.24432/C55S3H",
+    "url": "https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients",
+    "license": "CC BY 4.0",
+    "attribution": "I-Cheng Yeh",
+    "archive_path": "data/raw/uci_default_credit_card_clients/original_source.zip",
+    "archive_sha256": "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602",
+    "source_member": "default of credit card clients.xls",
+    "sheet_name": "Data",
+    "excel_header_row": 2,
+    "pandas_header_index": 1
+  },
+  "data_expectations": {
+    "rows": 30000,
+    "columns": 25,
+    "column_names": [
+      "ID",
+      "LIMIT_BAL",
+      "SEX",
+      "EDUCATION",
+      "MARRIAGE",
+      "AGE",
+      "PAY_0",
+      "PAY_2",
+      "PAY_3",
+      "PAY_4",
+      "PAY_5",
+      "PAY_6",
+      "BILL_AMT1",
+      "BILL_AMT2",
+      "BILL_AMT3",
+      "BILL_AMT4",
+      "BILL_AMT5",
+      "BILL_AMT6",
+      "PAY_AMT1",
+      "PAY_AMT2",
+      "PAY_AMT3",
+      "PAY_AMT4",
+      "PAY_AMT5",
+      "PAY_AMT6",
+      "default payment next month"
+    ],
+    "missing_values_allowed": false,
+    "duplicate_ids_allowed": false,
+    "all_columns_numeric": true
+  },
+  "identifier": {
+    "column": "ID",
+    "role": "record_identifier",
+    "use_as_model_feature": false
+  },
+  "task": {
+    "type": "binary_classification",
+    "target": "default payment next month",
+    "allowed_target_values": [
+      0,
+      1
+    ],
+    "positive_class": 1,
+    "features": [
+      "LIMIT_BAL",
+      "SEX",
+      "EDUCATION",
+      "MARRIAGE",
+      "AGE",
+      "PAY_0",
+      "PAY_2",
+      "PAY_3",
+      "PAY_4",
+      "PAY_5",
+      "PAY_6",
+      "BILL_AMT1",
+      "BILL_AMT2",
+      "BILL_AMT3",
+      "BILL_AMT4",
+      "BILL_AMT5",
+      "BILL_AMT6",
+      "PAY_AMT1",
+      "PAY_AMT2",
+      "PAY_AMT3",
+      "PAY_AMT4",
+      "PAY_AMT5",
+      "PAY_AMT6"
+    ]
+  },
+  "temporal_scope": {
+    "predictor_observation_period": "April-September 2005",
+    "target_description": "Default payment next month",
+    "status": "partially_documented",
+    "exact_observation_cutoff": null,
+    "exact_target_window": null,
+    "restriction": "Do not claim a precise operational prediction cutoff without further source documentation."
+  },
+  "semantic_policies": {
+    "EDUCATION": {
+      "undocumented_in_primary_uci_description": [
+        0,
+        5,
+        6
+      ],
+      "policy": "Preserve raw codes; require an explicit documented preprocessing decision."
+    },
+    "MARRIAGE": {
+      "undocumented_in_primary_uci_description": [
+        0
+      ],
+      "policy": "Preserve raw codes; require an explicit documented preprocessing decision."
+    },
+    "repayment_status": {
+      "columns": [
+        "PAY_0",
+        "PAY_2",
+        "PAY_3",
+        "PAY_4",
+        "PAY_5",
+        "PAY_6"
+      ],
+      "undocumented_in_primary_uci_description": [
+        -2,
+        0
+      ],
+      "policy": "Preserve raw codes; do not assign undocumented meanings as official UCI definitions."
+    },
+    "bill_amounts": {
+      "columns": [
+        "BILL_AMT1",
+        "BILL_AMT2",
+        "BILL_AMT3",
+        "BILL_AMT4",
+        "BILL_AMT5",
+        "BILL_AMT6"
+      ],
+      "negative_values": "preserve",
+      "automatic_clipping_or_winsorization": false
+    }
+  },
+  "governance": {
+    "attributes_requiring_fairness_review": [
+      "SEX",
+      "EDUCATION",
+      "MARRIAGE",
+      "AGE"
+    ],
+    "fairness_review_required_before_deployment": true,
+    "feature_availability_audit_required": true,
+    "production_use_authorized": false
+  },
+  "causal_scope": {
+    "causal_estimand_defined": false,
+    "treatment_defined": false,
+    "supports_credit_limit_intervention_effect_estimation": false,
+    "status": "unsupported_by_this_dataset",
+    "restriction": "Do not use this dataset alone to claim causal effects of credit-limit changes."
+  },
+  "processing_policy": {
+    "raw_source_modified": false,
+    "training_performed": false,
+    "automatic_feature_engineering": false,
+    "automatic_category_relabeling": false
+  }
+}

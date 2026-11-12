@@ -1,15 +1,16 @@
 # Dataset Source Audit — CCI
 
-**Status:** preliminary desk research; no dataset downloaded or inspected locally  
-**Date:** 2026-11-12  
-**Branch:** `research/dataset-source-audit`  
+**Status:** desk research plus local acquisition, structural, semantic, and benchmark-contract validation  \
+**Date:** 2026-11-12  \
+**Research branch:** `research/dataset-source-audit`  \
+**Contract branch:** `feat/uci-benchmark-contract`  \
 **Decision scope:** source selection for Data Engine / PD benchmark; not causal identification approval
 
 ## 1. Executive decision
 
-Use **UCI Default of Credit Card Clients (UCI dataset 350)** as the first candidate for a controlled Data Engine and predictive-default (PD) benchmark, subject to a fresh local acquisition audit and license/attribution verification.
+Use **UCI Default of Credit Card Clients (UCI dataset 350)** as the first controlled Data Engine and predictive-default (PD) benchmark.
 
-This is a **provisional engineering selection only**. The dataset is not sufficient, by itself, to estimate the causal effect of increasing a credit limit. It contains a credit-limit amount (`LIMIT_BAL`) and six months of repayment/bill/payment information, plus a next-month default outcome. The available description does not establish a customer-level sequence of credit-limit changes, an intervention timestamp, or a treatment assignment process.
+This is an engineering and predictive-benchmark selection only. The dataset is not sufficient, by itself, to estimate the causal effect of increasing a credit limit. It contains an observed credit-limit amount (`LIMIT_BAL`) and six months of repayment/bill/payment information, plus a next-month default outcome. It does not establish a customer-level sequence of credit-limit changes, an intervention timestamp, or a treatment assignment process.
 
 **Causal Engine remains blocked for real-data estimation.** Do not reinterpret a cross-sectional limit amount as a before/after intervention.
 
@@ -30,7 +31,7 @@ This is a **provisional engineering selection only**. The dataset is not suffici
 3. LendingClub accepted-loan data description (secondary documentation): https://github.com/michelkana/lendingclub/blob/master/CS109aLendingClub_Data.md  
    Describes accepted/funded loans from 2007 to 2018 Q3, with loan-level attributes and status. Treat this as a discovery reference, not an authoritative current distribution or license statement.
 
-UCI's official dataset page currently lists **CC BY 4.0** and provides the dataset download and citation. Preserve attribution to I-Cheng Yeh and the UCI dataset record; indicate any adaptations. Recheck the official page at acquisition time and retain a copy/reference of the license terms with the acquisition manifest. Do not treat third-party mirrors as canonical.
+UCI's official dataset page lists **CC BY 4.0** and provides the dataset download and citation. Preserve attribution to I-Cheng Yeh and the UCI dataset record; indicate any adaptations. The acquired archive's SHA-256 is recorded below. Do not treat third-party mirrors as canonical.
 
 ## 4. UCI variable-level suitability
 
@@ -41,77 +42,94 @@ The published UCI description identifies:
 - Monthly repayment-status fields: `PAY_0`, `PAY_2`–`PAY_6`.
 - Bill statement fields: `BILL_AMT1`–`BILL_AMT6`.
 - Payment amount fields: `PAY_AMT1`–`PAY_AMT6`.
-- Outcome: `default.payment.next.month`.
+- Outcome: `default payment next month` (original XLS column label).
 
 ### Important temporal and causal restrictions
 
-- The source is described as a set of client records with monthly history and a next-month default label.
+- The source describes six months of client history from April through September 2005 and a next-month default label.
 - `LIMIT_BAL` is an observed credit amount, not a documented treatment event.
-- The available public description does not provide a before/after limit pair, limit-change date, reason for change, policy assignment, or repeated customer snapshots around a limit intervention.
-- The monthly feature suffixes need to be mapped carefully to their actual months. Do not infer a treatment date merely from column order.
-- The next-month default label must not enter a feature set used to predict or explain the same outcome.
+- The public description does not provide a before/after limit pair, limit-change date, reason for change, policy assignment, or repeated customer snapshots around a limit intervention.
+- The monthly feature suffixes map to April–September 2005; the exact operational prediction cutoff and target observation window remain insufficiently specified for production-timing claims.
+- The next-month default label must not enter the feature set.
 - The repayment and bill/payment fields require a precise observation cutoff before they can be considered pre-treatment covariates for any hypothetical intervention.
 
-Consequently, this dataset can support an engineering and predictive benchmark after validation, but it does not currently support the CCI target estimand:
-**effect of a material credit-limit increase on subsequent default risk.**
+Consequently, this dataset can support an engineering and predictive benchmark, but it does not currently support the CCI target estimand: **effect of a material credit-limit increase on subsequent default risk.**
 
-## 5. Compatibility with the current CCI contract
+## 5. Compatibility with the current CCI causal contract
 
-The current contract expects identifiers `customer_id`, `observation_date`, treatment indicator `treatment_indicator`, before/after limit fields `credit_limit_before` / `credit_limit_after`, and outcomes `default_6m` / `default_12m`.
+The causal contract expects identifiers `customer_id`, `observation_date`, treatment indicator `treatment_indicator`, before/after limit fields `credit_limit_before` / `credit_limit_after`, and outcomes `default_6m` / `default_12m`.
 
-The UCI source description does not establish direct equivalents for:
-- a stable customer identifier suitable for longitudinal linkage;
-- an observation/intervention date;
-- treatment indicator;
-- pre-intervention limit;
-- post-intervention limit;
-- six- and twelve-month default outcomes.
+The UCI source does not establish direct equivalents for these intervention and longitudinal fields. Do not rename `LIMIT_BAL` to `credit_limit_before` or `credit_limit_after`. Do not rename the next-month outcome to `default_6m` or `default_12m`.
 
-Do not rename `LIMIT_BAL` to `credit_limit_before` or `credit_limit_after`. Do not rename the next-month outcome to `default_6m` or `default_12m`. Those would create false semantic equivalences.
+A source-specific predictive-benchmark contract is therefore maintained separately. The causal contract remains unchanged.
 
-A source-specific adapter and a separate predictive-benchmark contract will be needed. Keep the causal contract unchanged until a suitable longitudinal source is identified.
+## 6. Acquisition and structural audit — completed
 
-## 6. Acquisition and audit gate
+The user executed the acquisition and read-only audit in Colab on 2026-11-12.
 
-No acquisition was performed as part of this desk audit. When explicitly run in Colab, the acquisition workflow must:
+| Evidence | Observed result |
+|---|---|
+| Original archive | `data/raw/uci_default_credit_card_clients/original_source.zip` |
+| SHA-256 | `56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602` |
+| Archive member | `default of credit card clients.xls` |
+| Sheet / header | `Data` / Excel row 2 (`header=1`) |
+| Shape | 30,000 rows × 25 columns |
+| Missing cells | 0 |
+| Duplicate rows | 0 |
+| Duplicate IDs | 0 |
+| Target | Binary 0/1; 23,364 non-default and 6,636 default |
+| Structural quality gates | PASS |
 
-1. Download only from the verified canonical source.
-2. Preserve the original file unchanged under `data/raw/<source-id>/`.
-3. Record source URL, retrieval timestamp (UTC), declared dataset/version, license/terms reference, original filename, byte size, and SHA-256.
-4. Store extracted/normalized copies outside the raw directory.
-5. Inspect archive contents before extraction and reject unexpected paths or file types.
-6. Produce a data dictionary and structural profile without fitting models.
-7. Keep raw data out of Git unless repository policy and the source license explicitly permit it.
+The original archive was not modified. No model training was performed. Raw data is not committed to this repository.
 
-Required evidence before marking the dataset acquired:
-- source page and license/terms captured;
-- archive/file checksum;
-- file inventory;
-- row/column counts from the actual local file;
-- duplicate and missingness profile;
-- raw-to-canonical mapping with explicit unmapped fields;
-- temporal semantics review.
+## 7. Semantic audit findings
 
-## 7. Current gate status
+- UCI's primary variable description documents `EDUCATION` codes 1–4; observed values 0, 5, and 6 are not explained there.
+- UCI's primary description documents `MARRIAGE` codes 1–3; observed value 0 is not explained there.
+- For repayment status, UCI documents `-1` and delay codes 1–9; observed `-2` and `0` are not explained in the primary description.
+- Negative `BILL_AMT*` values were observed. They are preserved; no automatic clipping or winsorization is authorized.
+- Preserve original category values until a preprocessing decision is supported and recorded.
+- `SEX`, `EDUCATION`, `MARRIAGE`, and `AGE` require fairness review before any deployment-oriented use.
+
+The absence of an official definition is not permission to invent one. Secondary interpretations must remain explicitly labelled as secondary.
+
+## 8. Predictive benchmark contract
+
+A source-specific contract is stored at:
+
+`configs/datasets/uci_credit_default_benchmark_v1.json`
+
+It defines 23 predictors, excludes `ID` from model features, identifies the binary target, records the source DOI/license and archive checksum, preserves undocumented codes, records temporal uncertainty, and explicitly prohibits interpreting this dataset as evidence of credit-limit intervention effects.
+
+A validation record is stored at:
+
+`artifacts/audits/uci_benchmark_contract_validation.json`
+
+The user-reported Colab validation returned **PASS** for archive integrity, source member, schema, missingness, unique identifier, binary target, numeric schema, and contract JSON reload. The record is an execution report supplied by the user; it is not represented as an independently rerun CI result.
+
+## 9. Current gate status
 
 | Gate | Status |
 |---|---|
-| Candidate discovery | PASS — desk research only |
-| Provisional PD/Data Engine candidate | SELECTED — UCI, pending acquisition audit |
-| Canonical source and license verification at acquisition | PENDING |
-| Local raw file acquired | NOT RUN |
-| File integrity / SHA-256 | NOT RUN |
-| Actual schema and data-quality audit | NOT RUN |
-| Source-to-CCI mapping | BLOCKED pending inspection |
-| PD benchmark readiness | NOT READY |
+| Candidate discovery | PASS |
+| UCI source and license verification | PASS — CC BY 4.0; attribution recorded |
+| Local raw file acquired | PASS — Colab |
+| Archive integrity / SHA-256 | PASS |
+| Actual schema and structural quality audit | PASS |
+| Semantic review | COMPLETED — unresolved codes preserved and documented |
+| Separate predictive benchmark contract | PASS — user-reported Colab validation |
+| Contract versioned on feature branch | PASS |
+| Automated repository tests for benchmark contract | PENDING |
+| Predictive data pipeline | NOT STARTED |
+| Model training | NOT STARTED |
 | Causal identification readiness | BLOCKED |
 
-## 8. Next actions
+## 10. Next actions
 
-1. Acquire UCI dataset only after verifying the official download and license/attribution terms.
-2. Run a read-only acquisition and structural audit in Colab; no model training.
-3. Add a source-specific predictive benchmark contract rather than weakening the causal contract.
+1. Add repository unit tests for the benchmark contract and validate them manually in Colab.
+2. Implement a read-only, source-specific loader/validator with explicit schema and provenance checks.
+3. Build a predictive split protocol only after temporal semantics and evaluation design are reviewed.
 4. Continue searching for longitudinal credit-line data with customer snapshots, limit-change timestamps, treatment assignment/context, and post-intervention outcomes.
-5. If no suitable public observational source exists, use a clearly labelled synthetic longitudinal environment to test causal estimators and diagnostics, while keeping synthetic evidence separate from empirical claims.
+5. If no suitable public observational source exists, use a clearly labelled synthetic longitudinal environment to test causal estimators and diagnostics, keeping synthetic evidence separate from empirical claims.
 
-**No causal effect, ATE, CATE, propensity score, or model-performance result is established by this document.**
+**No causal effect, ATE, CATE, propensity score, or model-performance result is established by this audit.**
