@@ -1,7 +1,7 @@
 {
   "policy_id": "uci_pd_retrospective_benchmark_scope_v1",
   "version": "1.0.0",
-  "status": "proposed_pending_user_scope_approval",
+  "status": "approved_for_retrospective_research",
   "dataset": "UCI Default of Credit Card Clients",
   "permitted_research_interpretation": "Retrospective predictive benchmark on the supplied historical dataset, with the source timing limitations disclosed.",
   "prohibited_interpretations": [
@@ -28,7 +28,7 @@
   },
   "training_gate": {
     "training_authorized": false,
-    "requires_explicit_user_approval_of_retrospective_scope": true,
+    "requires_explicit_user_approval_of_retrospective_scope": false,
     "requires_preprocessing_protocol_review": true,
     "requires_feature_set_and_limitations_review": true,
     "requires_test_set_sealing": true
@@ -41,5 +41,10 @@
   "production": {
     "authorized": false,
     "requires_external_validation_governance_security_and_regulatory_review": true
+  },
+  "user_scope_approval": {
+    "status": "approved_by_user",
+    "interpretation": "The user's instruction 'Prossiga' in direct response to the explicit request for approval is treated as approval of the retrospective research-only PD benchmark scope.",
+    "training_authorized": false
   }
 }
