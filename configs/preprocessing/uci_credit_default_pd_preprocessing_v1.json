@@ -1,0 +1,47 @@
+{
+  "preprocessing_config_id": "uci_credit_default_pd_preprocessing_v1",
+  "version": "1.0.0",
+  "purpose": "Research-only tabular preprocessing protocol for the retrospective UCI PD benchmark.",
+  "feature_groups": {
+    "nominal_discrete": ["SEX", "EDUCATION", "MARRIAGE", "PAY_0", "PAY_2", "PAY_3", "PAY_4", "PAY_5", "PAY_6"],
+    "continuous_numeric": ["LIMIT_BAL", "AGE", "BILL_AMT1", "BILL_AMT2", "BILL_AMT3", "BILL_AMT4", "BILL_AMT5", "BILL_AMT6", "PAY_AMT1", "PAY_AMT2", "PAY_AMT3", "PAY_AMT4", "PAY_AMT5", "PAY_AMT6"]
+  },
+  "nominal_transform": {
+    "method": "one_hot_encoder",
+    "handle_unknown": "ignore",
+    "drop": null,
+    "preserve_raw_source_codes": true,
+    "infer_ordinal_distance": false
+  },
+  "numeric_transform": {
+    "method": "standard_scaler",
+    "with_mean": true,
+    "with_std": true,
+    "clipping": false,
+    "winsorization": false
+  },
+  "fit_policy": {
+    "split_before_fitting": true,
+    "fit_on": "train_partition_only",
+    "validation": "transform_only",
+    "test": "transform_only_after_model_and_threshold_freeze",
+    "test_reuse_for_tuning": false
+  },
+  "exclusions": {
+    "identifier": "ID",
+    "target": "default payment next month",
+    "identifier_and_target_never_enter_transformer": true
+  },
+  "missing_value_policy": "fail_fast; no imputation is defined for this phase because the validated source has no missing values.",
+  "source_policy": {
+    "mutate_raw_frame": false,
+    "rewrite_source_codes": false,
+    "remove_features_automatically": false
+  },
+  "limitations": [
+    "Predictor operational availability remains unresolved.",
+    "Feature leakage status remains not_determined.",
+    "Random stratified partitions are not temporal or out-of-time validation.",
+    "This preprocessing protocol does not authorize model training or production use."
+  ]
+}
