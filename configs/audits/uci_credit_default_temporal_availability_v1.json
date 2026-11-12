@@ -30,19 +30,19 @@
       "reference_month": null
     },
     "SEX": {
-      "temporal_classification": "static_attribute_without_reference_date",
+      "temporal_classification": "attribute_without_reference_date",
       "reference_month": null
     },
     "EDUCATION": {
-      "temporal_classification": "static_attribute_without_reference_date",
+      "temporal_classification": "attribute_without_reference_date",
       "reference_month": null
     },
     "MARRIAGE": {
-      "temporal_classification": "static_attribute_without_reference_date",
+      "temporal_classification": "attribute_without_reference_date",
       "reference_month": null
     },
     "AGE": {
-      "temporal_classification": "static_attribute_without_reference_date",
+      "temporal_classification": "attribute_without_reference_date",
       "reference_month": null
     },
     "PAY_0": {
