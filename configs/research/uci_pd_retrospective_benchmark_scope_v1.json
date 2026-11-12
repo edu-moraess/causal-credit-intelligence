@@ -27,7 +27,7 @@
     "require_fit_on_training_partition_only": true
   },
   "training_gate": {
-    "training_authorized": false,
+    "training_authorized": true,
     "requires_explicit_user_approval_of_retrospective_scope": false,
     "requires_preprocessing_protocol_review": true,
     "requires_feature_set_and_limitations_review": true,
@@ -45,6 +45,16 @@
   "user_scope_approval": {
     "status": "approved_by_user",
     "interpretation": "The user's instruction 'Prossiga' in direct response to the explicit request for approval is treated as approval of the retrospective research-only PD benchmark scope.",
-    "training_authorized": false
+    "training_authorized": true,
+    "training_authorization": "User explicitly authorized the first Logistic Regression baseline on 2026-11-12, limited to train fitting and validation evaluation; test remains sealed until model and decision threshold are frozen."
+  },
+  "baseline_training_authorization": {
+    "status": "authorized",
+    "model": "sklearn.linear_model.LogisticRegression",
+    "fit_partition": "train_only",
+    "evaluation_partition": "validation_only",
+    "test_partition": "sealed",
+    "permitted_scope": "single retrospective predictive-default baseline; no causal estimation, temporal generalization, deployment, or production use",
+    "authorization_date": "2026-11-12"
   }
 }
