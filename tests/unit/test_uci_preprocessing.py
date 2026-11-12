@@ -64,8 +64,17 @@ def test_fit_occurs_on_train_only_and_other_partitions_are_transform_only():
     assert result["target_in_features"] is False
     assert result["X"]["train"].shape[0] == 24
     assert result["X"]["validation"].shape[0] == 8
-    assert result["X"]["test"].shape[0] == 8
+    assert result["X"]["test"] is None
+    assert result["y"]["test"] is None
+    assert result["test_released"] is False
     pd.testing.assert_frame_equal(frame, before)
+
+    released = prepare_uci_pd_partitions(
+        frame, splits, ROOT, contract, config, release_test=True
+    )
+    assert released["X"]["test"].shape[0] == 8
+    assert released["y"]["test"].shape[0] == 8
+    assert released["test_released"] is True
 
 
 def test_split_overlap_or_missing_rows_is_rejected():
