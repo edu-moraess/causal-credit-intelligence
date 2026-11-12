@@ -1,0 +1,45 @@
+{
+  "policy_id": "uci_pd_retrospective_benchmark_scope_v1",
+  "version": "1.0.0",
+  "status": "proposed_pending_user_scope_approval",
+  "dataset": "UCI Default of Credit Card Clients",
+  "permitted_research_interpretation": "Retrospective predictive benchmark on the supplied historical dataset, with the source timing limitations disclosed.",
+  "prohibited_interpretations": [
+    "Operational production credit scoring",
+    "Out-of-time or temporal generalization",
+    "Evidence of future-period performance",
+    "Causal effects of credit-limit changes",
+    "Fairness certification or deployment readiness"
+  ],
+  "evaluation_design": {
+    "split_config_id": "uci_credit_default_pd_v1",
+    "split_strategy": "stratified_random_by_target",
+    "temporal_validation": false,
+    "out_of_time_validation": false,
+    "test_set_policy": "Keep test set sealed until model and decision threshold are frozen; use once for final retrospective evaluation.",
+    "random_split_limitation": "Rows are partitioned randomly; this does not create a chronological or customer-history holdout."
+  },
+  "feature_policy": {
+    "operational_availability": "unresolved_for_all_23_predictors",
+    "feature_leakage": "not_determined",
+    "allow_feature_removal_or_selection_without_review": false,
+    "preserve_source_codes_and_values": true,
+    "require_fit_on_training_partition_only": true
+  },
+  "training_gate": {
+    "training_authorized": false,
+    "requires_explicit_user_approval_of_retrospective_scope": true,
+    "requires_preprocessing_protocol_review": true,
+    "requires_feature_set_and_limitations_review": true,
+    "requires_test_set_sealing": true
+  },
+  "causal_track": {
+    "enabled": false,
+    "reason": "The UCI dataset does not document customer-level credit-limit interventions, treatment timing, and a sufficiently defined post-intervention outcome.",
+    "requires_separate_longitudinal_intervention_dataset": true
+  },
+  "production": {
+    "authorized": false,
+    "requires_external_validation_governance_security_and_regulatory_review": true
+  }
+}
