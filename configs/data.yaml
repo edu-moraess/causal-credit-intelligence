@@ -1,0 +1,47 @@
+# Causal Credit Intelligence — Data configuration
+# ArqTech Labs
+#
+# No default dataset is assumed. Sources must be supplied explicitly.
+
+data:
+  contract: "cci_credit_risk_v1"
+  contract_version: "0.1.0"
+  default_source: null   # Set to filename under data/raw/ when available
+
+  identifiers:
+    - customer_id
+    - observation_date
+
+  treatment:
+    indicator: treatment_indicator
+    before: credit_limit_before
+    after: credit_limit_after
+    definition: >
+      Binary intervention: material increase in credit limit.
+      Operational definition must be fixed and documented before any
+      causal estimate is treated as valid.
+
+  outcomes:
+    primary: default_6m
+    secondary: default_12m
+    definition: >
+      Binary default / severe delinquency within the stated horizon
+      after the reference observation or treatment date.
+      Exact DPD threshold and event definition are data-source specific.
+
+  validation:
+    require_identifiers: true
+    high_missing_threshold: 0.30
+    check_duplicates_on:
+      - customer_id
+      - observation_date
+    enforce_pre_treatment_covariates: true
+
+  leakage_guard:
+    post_treatment_fields:
+      - credit_limit_after
+      - default_6m
+      - default_12m
+    note: >
+      These fields must not enter the covariate set used for propensity
+      or outcome models when estimating causal effects.

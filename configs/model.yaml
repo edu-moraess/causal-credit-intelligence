@@ -1,0 +1,48 @@
+# Causal Credit Intelligence — Model configuration
+# ArqTech Labs
+#
+# All model sections are placeholders. No training occurs in foundation stage.
+
+models:
+  pd:
+    enabled: false
+    algorithm: null          # future: logistic | xgboost | lightgbm | scorecard
+    target: default_6m
+    status: "not_implemented"
+
+  double_ml:
+    enabled: false
+    library: "doubleml"      # planned: DoubleML / EconML
+    treatment: treatment_indicator
+    outcome: default_6m
+    status: "not_implemented"
+
+  causal_forest:
+    enabled: false
+    library: "econml"        # planned
+    treatment: treatment_indicator
+    outcome: default_6m
+    status: "not_implemented"
+
+evaluation:
+  metrics_planned:
+    discrimination:
+      - auc
+      - gini
+      - ks
+    calibration:
+      - brier
+      - ece
+    causal:
+      - ate
+      - cate
+      - pehe          # when synthetic ground truth available
+    stability:
+      - psi
+      - csi
+
+governance:
+  require_data_hash: true
+  require_config_hash: true
+  require_methodology_ref: true
+  min_status_for_reporting: "completed"

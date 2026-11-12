@@ -1,0 +1,31 @@
+# Causal Credit Intelligence (CCI) — Dependency specification
+# ArqTech Labs | Foundation stage
+#
+# Core dependencies required for foundation (config, validation, UI shell).
+# Heavy ML / causal libraries are listed as optional extras.
+
+# --- Core (required for foundation) ---
+pyyaml>=6.0
+pandas>=2.0
+numpy>=1.24
+streamlit>=1.28
+plotly>=5.18
+pytest>=7.4
+
+# --- Optional: classical ML (PD engine phase) ---
+# scikit-learn>=1.3
+# xgboost>=2.0
+
+# --- Optional: causal inference (Causal Engine phase) ---
+# econml>=0.15
+# doubleml>=0.7
+
+# --- Optional: packaging / quality ---
+# black>=23.0
+# ruff>=0.1
+# mypy>=1.5
+
+# Notes:
+# - Do not install heavy optional packages until the corresponding phase begins.
+# - Google Colab: install via !pip install -r requirements.txt (or selective).
+# - Pin exact versions in a lockfile when moving to reproducible experiments.

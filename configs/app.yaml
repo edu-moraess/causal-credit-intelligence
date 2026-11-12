@@ -1,0 +1,32 @@
+# Causal Credit Intelligence — Application configuration
+# ArqTech Labs
+
+app:
+  name: "Causal Credit Intelligence"
+  short_name: "CCI"
+  organization: "ArqTech Labs"
+  version: "0.1.0"
+  stage: "foundation"
+  description: >
+    Platform for causal machine learning applied to credit risk analytics.
+    Investigates the causal effect of credit limit interventions on default probability.
+
+ui:
+  theme: "dark"
+  layout: "wide"
+  sidebar_state: "expanded"
+  page_title: "CCI | Causal Credit Intelligence"
+  page_icon: "◈"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+
+paths:
+  data_raw: "data/raw"
+  data_interim: "data/interim"
+  data_processed: "data/processed"
+  artifacts_models: "artifacts/models"
+  artifacts_experiments: "artifacts/experiments"
+  artifacts_metrics: "artifacts/metrics"
+  reports: "reports"
