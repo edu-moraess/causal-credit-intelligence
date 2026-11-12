@@ -92,12 +92,13 @@ def prepare_uci_pd_partitions(
     root: str | Path | None = None,
     contract: dict[str, Any] | None = None,
     config: dict[str, Any] | None = None,
+    release_test: bool = False,
 ) -> dict[str, Any]:
-    """Fit preprocessing on train only and transform validation/test without fitting.
+    """Fit on train, transform validation, and keep test sealed by default.
 
-    Returns transformed feature matrices, copied target arrays, the fitted
-    transformer, and feature names. This function does not fit a predictive
-    estimator or inspect test performance.
+    Set release_test=True only after model and threshold are frozen. Until then,
+    test features and labels are not passed to the transformer or returned.
+    This function never fits a predictive estimator or inspects test performance.
     """
     import pandas as pd
 
@@ -141,11 +142,20 @@ def prepare_uci_pd_partitions(
     transformed = {
         "train": X_train,
         "validation": transformer.transform(X.iloc[indices["validation"]]),
-        "test": transformer.transform(X.iloc[indices["test"]]),
+        "test": (
+            transformer.transform(X.iloc[indices["test"]])
+            if release_test
+            else None
+        ),
+    }
+    target_partitions = {
+        "train": y[indices["train"]].copy(),
+        "validation": y[indices["validation"]].copy(),
+        "test": y[indices["test"]].copy() if release_test else None,
     }
     return {
         "X": transformed,
-        "y": {name: y[indices[name]].copy() for name in SPLIT_NAMES},
+        "y": target_partitions,
         "transformer": transformer,
         "feature_names": transformer.get_feature_names_out().tolist(),
         "feature_count": int(len(transformer.get_feature_names_out())),
@@ -153,6 +163,7 @@ def prepare_uci_pd_partitions(
         "preprocessing_fit_partition": "train",
         "validation_used_for_fitting": False,
         "test_used_for_fitting": False,
+        "test_released": bool(release_test),
         "identifier_in_features": False,
         "target_in_features": False,
         "source_frame_modified": False,
