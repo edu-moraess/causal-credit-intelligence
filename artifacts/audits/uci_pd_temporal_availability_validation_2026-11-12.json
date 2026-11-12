@@ -1,0 +1,37 @@
+{
+  "audit_id": "uci_pd_temporal_availability_validation_2026-11-12",
+  "date": "2026-11-12",
+  "branch": "audit/uci-temporal-availability",
+  "pull_request": 4,
+  "validation_source": "user-reported manual execution in Google Colab",
+  "validation_type": "manual",
+  "full_repository_test_suite": {
+    "status": "PASS",
+    "exact_test_count": 66
+  },
+  "temporal_availability_audit": {
+    "status": "PASS",
+    "feature_count": 23,
+    "certified_available_at_operational_cutoff": 0,
+    "unresolved": 23,
+    "latest_documented_predictor_month": "2005-09",
+    "exact_operational_observation_cutoff": "not documented",
+    "target_calendar_window": "not documented",
+    "leakage_assessment": "not_determined"
+  },
+  "scope": {
+    "training_performed": false,
+    "preprocessing_fitted": false,
+    "frame_modified": false,
+    "causal_effect_estimation_performed": false,
+    "production_use_authorized": false,
+    "ci_run": false
+  },
+  "interpretation": [
+    "Calendar-month mappings are documented for monthly feature families.",
+    "No predictor is certified as available at a real-world operational cutoff.",
+    "Unresolved availability does not establish that all features leak.",
+    "The random split remains non-temporal and is not out-of-time validation.",
+    "The UCI dataset remains a retrospective predictive benchmark only, subject to explicit timing limitations."
+  ]
+}
