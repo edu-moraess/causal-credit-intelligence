@@ -1,0 +1,129 @@
+{
+  "audit_config_id": "uci_credit_default_temporal_availability_v1",
+  "version": "1.0.0",
+  "purpose": "Source-documented calendar mapping and conservative operational-availability assessment for the UCI PD benchmark",
+  "source": {
+    "provider": "UCI Machine Learning Repository",
+    "dataset_name": "Default of Credit Card Clients",
+    "doi": "10.24432/C55S3H",
+    "url": "https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients",
+    "retrieved_date": "2026-11-12",
+    "temporal_evidence": "UCI describes monthly repayment, bill statement, and previous payment records from April through September 2005. The variable label describes the outcome as default payment next month."
+  },
+  "source_temporal_scope": {
+    "predictor_period_start": "2005-04",
+    "predictor_period_end": "2005-09",
+    "exact_operational_observation_cutoff": null,
+    "exact_within_month_availability_times": null,
+    "interpretation": "Calendar month labels are documented for monthly fields. The source does not provide per-record extraction timestamps, statement-close timestamps, publication timestamps, or a precise operational prediction cutoff."
+  },
+  "target_temporal_metadata": {
+    "target_column": "default payment next month",
+    "horizon_description": "The source labels the binary outcome as default payment next month, relative to the predictor history.",
+    "calendar_window": null,
+    "event_timestamp_available": false,
+    "restriction": "Do not assign an exact target calendar month or event window without additional primary-source documentation."
+  },
+  "feature_temporal_metadata": {
+    "LIMIT_BAL": {
+      "temporal_classification": "point_in_time_value_without_as_of_date",
+      "reference_month": null
+    },
+    "SEX": {
+      "temporal_classification": "static_attribute_without_reference_date",
+      "reference_month": null
+    },
+    "EDUCATION": {
+      "temporal_classification": "static_attribute_without_reference_date",
+      "reference_month": null
+    },
+    "MARRIAGE": {
+      "temporal_classification": "static_attribute_without_reference_date",
+      "reference_month": null
+    },
+    "AGE": {
+      "temporal_classification": "static_attribute_without_reference_date",
+      "reference_month": null
+    },
+    "PAY_0": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-09"
+    },
+    "PAY_2": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-08"
+    },
+    "PAY_3": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-07"
+    },
+    "PAY_4": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-06"
+    },
+    "PAY_5": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-05"
+    },
+    "PAY_6": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-04"
+    },
+    "BILL_AMT1": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-09"
+    },
+    "BILL_AMT2": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-08"
+    },
+    "BILL_AMT3": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-07"
+    },
+    "BILL_AMT4": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-06"
+    },
+    "BILL_AMT5": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-05"
+    },
+    "BILL_AMT6": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-04"
+    },
+    "PAY_AMT1": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-09"
+    },
+    "PAY_AMT2": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-08"
+    },
+    "PAY_AMT3": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-07"
+    },
+    "PAY_AMT4": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-06"
+    },
+    "PAY_AMT5": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-05"
+    },
+    "PAY_AMT6": {
+      "temporal_classification": "monthly_observation_without_release_timestamp",
+      "reference_month": "2005-04"
+    }
+  },
+  "decision_policy": {
+    "certify_feature_availability_from_calendar_month_alone": false,
+    "treat_unknown_as_pre_cutoff": false,
+    "infer_no_leakage_from_missing_timestamps": false,
+    "training_authorized": false,
+    "temporal_validation_supported": false,
+    "production_use_authorized": false
+  }
+}
