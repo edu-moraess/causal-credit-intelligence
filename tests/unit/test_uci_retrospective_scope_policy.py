@@ -6,13 +6,16 @@ ROOT = Path(__file__).resolve().parents[2]
 POLICY_PATH = ROOT / "configs/research/uci_pd_retrospective_benchmark_scope_v1.json"
 
 
-def test_retrospective_scope_requires_explicit_user_approval_before_training():
+def test_retrospective_scope_is_approved_but_training_remains_gated():
     policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
 
-    assert policy["status"] == "proposed_pending_user_scope_approval"
+    assert policy["status"] == "approved_for_retrospective_research"
+    assert policy["user_scope_approval"]["status"] == "approved_by_user"
+    assert policy["user_scope_approval"]["training_authorized"] is False
     assert policy["training_gate"]["training_authorized"] is False
-    assert policy["training_gate"]["requires_explicit_user_approval_of_retrospective_scope"] is True
+    assert policy["training_gate"]["requires_explicit_user_approval_of_retrospective_scope"] is False
     assert policy["training_gate"]["requires_preprocessing_protocol_review"] is True
+    assert policy["training_gate"]["requires_feature_set_and_limitations_review"] is True
     assert policy["training_gate"]["requires_test_set_sealing"] is True
 
 
