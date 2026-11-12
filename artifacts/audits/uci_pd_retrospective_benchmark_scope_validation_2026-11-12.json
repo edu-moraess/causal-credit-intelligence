@@ -1,0 +1,48 @@
+{
+  "audit_id": "uci_pd_retrospective_benchmark_scope_validation_2026-11-12",
+  "date": "2026-11-12",
+  "validation_mode": "manual_google_colab",
+  "evidence_source": "user_reported_colab_output_and_follow_up_clarification",
+  "worktree": {
+    "status": "clean"
+  },
+  "test_suite": {
+    "command": "python -m pytest -v",
+    "process_returncode": 0,
+    "result": "PASS",
+    "passed": 66,
+    "failed": 0,
+    "count_note": "The user clarified that the successful full-suite run contained 66 passed tests; the initial pasted excerpt omitted the pytest summary."
+  },
+  "policy_assertions": {
+    "training_authorized_false": "PASS",
+    "explicit_user_scope_approval_required": "PASS",
+    "temporal_validation_false": "PASS",
+    "all_23_predictors_operational_availability_unresolved": "PASS",
+    "feature_leakage_not_determined": "PASS",
+    "causal_track_disabled": "PASS",
+    "production_not_authorized": "PASS",
+    "overall": "PASS"
+  },
+  "gates_after_validation": {
+    "retrospective_scope_user_approval": "pending",
+    "training": "blocked",
+    "fitted_preprocessing": "blocked_pending_protocol_review_and_scope_approval",
+    "causal_estimation": "blocked",
+    "production": "not_authorized"
+  },
+  "execution_boundaries": {
+    "model_training_performed": false,
+    "fitted_preprocessing_performed": false,
+    "causal_estimation_performed": false,
+    "production_authorized": false,
+    "github_actions_or_ci_claimed": false
+  },
+  "notes": [
+    "Validation was performed manually in Google Colab and reported by the user.",
+    "A clean worktree was reported before the test run.",
+    "The full pytest suite completed with 66 passed and 0 failed.",
+    "The retrospective scope policy assertions passed.",
+    "The user has not yet explicitly approved the proposed retrospective benchmark scope."
+  ]
+}
