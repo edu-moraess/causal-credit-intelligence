@@ -18,7 +18,7 @@ The deterministic stratified 70/15/15 split (seed 42) is created before any fitt
 
 ## Implementation
 
-`prepare_uci_pd_partitions` implements the train-only fit/transform sequence. It returns transformed partitions, copied target arrays, the fitted transformer, and feature names. It does not train a predictive estimator or calculate model metrics.
+`prepare_uci_pd_partitions` implements the train-only fit/transform sequence. It returns train and validation matrices, copied target arrays, the fitted transformer, and feature names. The test partition remains sealed by default: neither its features nor labels are returned or passed through the transformer. Set `release_test=True` only after the model and threshold are frozen. The helper does not train a predictive estimator or calculate model metrics.
 
 ## Limitations
 
